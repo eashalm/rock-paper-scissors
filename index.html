@@ -6,25 +6,73 @@
         <meta charset="UTF-8">
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
-        <title>Rock Paper Scissors</title>
+        <title>Rock, Paper, Scissors!</title>
         <link rel="stylesheet" href="./style.css">
         <script src="./script.js" defer></script>
     </head>
 
     <body>
-        <h1>Rock, Paper, Scissors</h1>
+        <div class="game">
+            <div class="title">Rock, Paper, Scissors!</div>
 
+            <div class="first-to">
+                <label class="first-to sel">First To <select></select> Wins </label>
+            </div>
 
-        <label class="first-to">First to: </label>
-        <p class="player-score">Player: 0</p>
-        <p class="computer-score">Computer: 0</p>
+            <div class="cards">
+                <div class="player card">
+                    <div class="player score">Player: 0</div>
 
-        <h2>Choose your weapon</h2>
-        <button class="rock">Rock</button>
-        <button class="paper">Paper</button>
-        <button class="scissors">Scissors</button>
+                    <img class="player avatar" src="./images/player.png" alt="A picture of the player.">
 
-        <p class="results"></p>
+                    <ul class="weapons">
+                        <li class="weapon">
+                            <img class = "player" id = "rock" src="./images/rock.jpg" alt="A picture of a rock.">
+                        </li>
+                        <li class="weapon">
+                            <img class = "player" id = "paper" src="./images/paper.jpg" alt="A picture of a sheet of paper.">
+                        </li>
+                        <li class="weapon">
+                            <img class = "player" id = "scissors" src="./images/scissors.png" alt="A picture of scissors.">
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="computer card">
+                    <div class="computer score">Computer: 0</div>
+
+                    <img class="computer avatar" src="./images/computer.png" alt="A picture of the computer.">
+
+                    <ul class="weapons">
+                        <li class="weapon">
+                            <img class = "computer" id = "rock" src="./images/rock.jpg" alt="A picture of a rock.">
+                        </li>
+                        <li class="weapon">
+                            <img class = "computer" id = "paper" src="./images/paper.jpg" alt="A picture of a sheet of paper.">
+                        </li>
+                        <li class="weapon">
+                            <img class = "computer" id = "scissors" src="./images/scissors.png" alt="A picture of scissors.">
+                        </li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="results"></div>
+        </div>
+
+        <div class="endgame invisible">
+            <div id="endgame-msg"></div>
+
+            <img id="endgame-img">
+
+            <a href="index.html">
+                <button class="restart">Restart</button>
+            </a>
+        </div>
+
+        <audio class="win" src="./sounds/win.mp3"></audio>
+        <audio class="loss" src="./sounds/loss.mp3"></audio>
+        <audio class="tie" src="./sounds/tie.mp3"></audio>
     </body>
 
 </html>

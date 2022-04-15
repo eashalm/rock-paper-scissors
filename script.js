@@ -1,45 +1,69 @@
 // Initialize both the player's and computer's score to 0.
 let playerScore = computerScore = 0;
-// By default, game is first to 5. Can be changed via drop-down.
-let firstTo = 3;
 
-let sel = document.createElement('select');
+// By default, the game is first to 5. Can be changed via drop-down.
+let firstTo = 5;
+
+// Add the options 1-100 to the drop-down, and set the default option to 5.
+let sel = document.querySelector('select');
 for (let i = 0; i<100; i++) { sel[i] = new Option(i+1, i+1); }
 sel.selectedIndex = firstTo - 1;
-document.querySelector('.first-to').insertAdjacentElement('afterend', sel);
-
 document.querySelector('select').addEventListener('change', e => firstTo = Number(e.target.value));
 
-let btns = document.querySelectorAll('button');
+// Add an event listener for when the player clicks rock, paper, or scissors.
+let btns = document.querySelectorAll('img.player');
 btns.forEach(btn => btn.addEventListener('click', clickHandler));
 
+// Function that handles the player's selection of rock, paper, or scissors.
 function clickHandler(e) {
-    let playerSelection = e.target.className,
+    // Store the player's selection, computer's selection, and compute the winner.
+    let playerSelection = e.target.id,
         computerSelection = computerPlay(),
         winner = playRound(playerSelection, computerSelection);
+
+    // Deselect all images, and then select only the two images corresponding to the player's and computer's selection.
+    document.querySelectorAll('img').forEach(img => img.classList.remove('selected'));
+    document.querySelector(`.player#${playerSelection}`).classList.add('selected');
+    document.querySelector(`.computer#${computerSelection}`).classList.add('selected');
+
+    // If the player wins: increment their score, and let them know through text and audio that they won the round.
     if (winner == 'player') {
         playerScore++;
-        document.querySelector('.player-score').textContent = `Player: ${playerScore}`;
+        document.querySelector('.player.score').textContent = `Player: ${playerScore}`;
         document.querySelector('.results').textContent = `You won the round! ${playerSelection} beats ${computerSelection}.`;
+        document.querySelector('audio.win').currentTime = 0;
+        document.querySelector('audio.win').play();
     }
+    // If the player loses: increment the computer's score, and let them know through text and audio that they lost the round.
     else if (winner == 'computer') {
         computerScore++;
-        document.querySelector('.computer-score').textContent = `Computer: ${computerScore}`;
+        document.querySelector('.computer.score').textContent = `Computer: ${computerScore}`;
         document.querySelector('.results').textContent = `You lost the round! ${computerSelection} beats ${playerSelection}.`;
+        document.querySelector('audio.loss').currentTime = 0;
+        document.querySelector('audio.loss').play();
     }
+    // If it's a tie: let the player know through text and audio that the round is tied.
     else {
-        document.querySelector('.results').textContent = `Tie! ${playerSelection} === ${computerSelection}.`;
+        document.querySelector('.results').textContent = `The round is tied! ${playerSelection} vs. ${computerSelection}.`;
+        document.querySelector('audio.tie').currentTime = 0;
+        document.querySelector('audio.tie').play();
     }
 
+    // If the player or computer have enough points to win: display the endgame message/image and restart button.
     if (playerScore == firstTo || computerScore == firstTo) {
-        msg = playerScore > computerScore ? `You won the game by a score of ${playerScore}-${computerScore}` : 
+        msg = playerScore > computerScore ? `You won the game by a score of ${playerScore}-${computerScore}.` : 
             `You lost the game by a score of ${computerScore}-${playerScore}.`;
-        document.querySelector('.results').textContent = msg;
+        img = playerScore > computerScore ? './images/you-win.jpg' : './images/you-lose.gif';
+        document.querySelector('#endgame-msg').textContent = msg;
+        document.querySelector('#endgame-img').src = img;
+        document.querySelector('.game').classList.add('invisible');
+        document.querySelector('.endgame').classList.remove('invisible');
         playerScore = computerScore = 0;
-        document.querySelector('.player-score').textContent = `Player: ${playerScore}`;
-        document.querySelector('.computer-score').textContent = `Computer: ${computerScore}`;
+        document.querySelector('.player.score').textContent = `Player: ${playerScore}`;
+        document.querySelector('.computer.score').textContent = `Computer: ${computerScore}`;
     }
 
+    // Only enable the "First To" selector if both players have 0 points.
     if (playerScore != 0 || computerScore != 0) { document.querySelector('select').setAttribute('disabled', true); }
     if (playerScore == 0 && computerScore == 0) { document.querySelector('select').removeAttribute('disabled'); }
 }
@@ -75,26 +99,4 @@ function playRound(playerSelection, computerSelection) {
         return computerSelection == 'paper' ? 'player' : 
         (computerSelection == 'rock' ? 'computer' : undefined);
     }
-  }
-
-/* "Plays" an n-round game of rock-paper-scissors by logging the result of each round, and the overall winner, in the console.
-function game(numRounds) {
-    let numWon = numLost = 0;
-
-    for (let i = 0; i < numRounds; i++) {
-        // Play a round and store the result in a variable, then log the result in the console.
-        playerSelection = window.prompt("Rock, paper, or scissors?").trim();
-        computerSelection = computerPlay();
-        roundResult = playRound(playerSelection, computerSelection);
-        console.log(roundResult);
-
-        // If the player won the round, increment numWon. If they lost, increment numLost.
-        if ( roundResult.includes('won') ) { numWon++; }
-        else if ( roundResult.includes('lost') ) { numLost++; }
-    }
-
-    // Log the result of the game (win, loss, or draw) to the console.
-    if ( numWon > numLost ) { console.log(`You won the game with a score of ${numWon}-${numLost}.`) }
-    else if ( numLost > numWon ) { console.log(`You lost the game with a score of ${numLost}-${numWon}.`) }
-    else { console.log(`The game is drawn with a score of ${numWon}-${numLost}.`) }
-} */
+}
