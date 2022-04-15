@@ -1,3 +1,49 @@
+// Initialize both the player's and computer's score to 0.
+let playerScore = computerScore = 0;
+// By default, game is first to 5. Can be changed via drop-down.
+let firstTo = 3;
+
+let sel = document.createElement('select');
+for (let i = 0; i<100; i++) { sel[i] = new Option(i+1, i+1); }
+sel.selectedIndex = firstTo - 1;
+document.querySelector('.first-to').insertAdjacentElement('afterend', sel);
+
+document.querySelector('select').addEventListener('change', e => firstTo = Number(e.target.value));
+
+let btns = document.querySelectorAll('button');
+btns.forEach(btn => btn.addEventListener('click', clickHandler));
+
+function clickHandler(e) {
+    let playerSelection = e.target.className,
+        computerSelection = computerPlay(),
+        winner = playRound(playerSelection, computerSelection);
+    if (winner == 'player') {
+        playerScore++;
+        document.querySelector('.player-score').textContent = `Player: ${playerScore}`;
+        document.querySelector('.results').textContent = `You won the round! ${playerSelection} beats ${computerSelection}.`;
+    }
+    else if (winner == 'computer') {
+        computerScore++;
+        document.querySelector('.computer-score').textContent = `Computer: ${computerScore}`;
+        document.querySelector('.results').textContent = `You lost the round! ${computerSelection} beats ${playerSelection}.`;
+    }
+    else {
+        document.querySelector('.results').textContent = `Tie! ${playerSelection} === ${computerSelection}.`;
+    }
+
+    if (playerScore == firstTo || computerScore == firstTo) {
+        msg = playerScore > computerScore ? `You won the game by a score of ${playerScore}-${computerScore}` : 
+            `You lost the game by a score of ${computerScore}-${playerScore}.`;
+        document.querySelector('.results').textContent = msg;
+        playerScore = computerScore = 0;
+        document.querySelector('.player-score').textContent = `Player: ${playerScore}`;
+        document.querySelector('.computer-score').textContent = `Computer: ${computerScore}`;
+    }
+
+    if (playerScore != 0 || computerScore != 0) { document.querySelector('select').setAttribute('disabled', true); }
+    if (playerScore == 0 && computerScore == 0) { document.querySelector('select').removeAttribute('disabled'); }
+}
+
 // Returns a pseudorandom integer in the interval [min, max), where min and max are integers with min < max.
 function randInt(min, max) {
     return Math.floor(Math.random() * (max-min)) + min;
@@ -7,46 +53,31 @@ function randInt(min, max) {
 function computerPlay() {
     let generatedNum = randInt(0,3);
 
-    if (generatedNum == 0) {
-        return 'rock';
-    }
-    else if (generatedNum == 1) {
-        return 'paper';
-    }
-    else {
-        return 'scissors';
-    }
+    if ( generatedNum == 0 ) { return 'rock'; }
+    else if ( generatedNum == 1 ) { return 'paper'; }
+    else { return 'scissors'; }
 }
 
 // "Plays" a single round of rock-paper-scissors by returning a string declaring the winner of the round (if any).
 function playRound(playerSelection, computerSelection) {
     playerSelection = playerSelection.toLowerCase();
-    let winner;
     
     // Determines who the winner is (player or computer).
     if (playerSelection == 'rock') {
-        winner = computerSelection == 'scissors' ? 'player' : (computerSelection == 'paper' ? 'computer' : undefined);
+        return computerSelection == 'scissors' ? 'player' : 
+        (computerSelection == 'paper' ? 'computer' : undefined);
     }
     else if (playerSelection == 'paper') {
-        winner = computerSelection == 'rock' ? 'player' : (computerSelection == 'scissors' ? 'computer' : undefined);
+        return computerSelection == 'rock' ? 'player' : 
+        (computerSelection == 'scissors' ? 'computer' : undefined);
     }
     else {
-        winner = computerSelection == 'paper' ? 'player' : (computerSelection == 'rock' ? 'computer' : undefined);
-    }
-
-    // Returns a string based on who the winner is. If no winner, declares a tie.
-    if (winner == 'player') {
-        return `You won the round! ${playerSelection} beats ${computerSelection}.`;
-    }
-    else if (winner == 'computer') {
-        return `You lost the round! ${computerSelection} beats ${playerSelection}.`;
-    }
-    else {
-        return `Tie! ${playerSelection} === ${computerSelection}.`;
+        return computerSelection == 'paper' ? 'player' : 
+        (computerSelection == 'rock' ? 'computer' : undefined);
     }
   }
 
-// "Plays" an n-round game of rock-paper-scissors by logging the result of each round, and the overall winner, in the console.
+/* "Plays" an n-round game of rock-paper-scissors by logging the result of each round, and the overall winner, in the console.
 function game(numRounds) {
     let numWon = numLost = 0;
 
@@ -66,4 +97,4 @@ function game(numRounds) {
     if ( numWon > numLost ) { console.log(`You won the game with a score of ${numWon}-${numLost}.`) }
     else if ( numLost > numWon ) { console.log(`You lost the game with a score of ${numLost}-${numWon}.`) }
     else { console.log(`The game is drawn with a score of ${numWon}-${numLost}.`) }
-}
+} */
