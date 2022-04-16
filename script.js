@@ -56,8 +56,8 @@ function clickHandler(e) {
         img = playerScore > computerScore ? './images/you-win.jpg' : './images/you-lose.gif';
         document.querySelector('#endgame-msg').textContent = msg;
         document.querySelector('#endgame-img').src = img;
-        document.querySelector('.game').classList.add('invisible');
-        document.querySelector('.endgame').classList.remove('invisible');
+        document.querySelector('.game').style.display = 'none';
+        document.querySelector('.endgame').style.display = 'flex';
         playerScore = computerScore = 0;
         document.querySelector('.player.score').textContent = `Player: ${playerScore}`;
         document.querySelector('.computer.score').textContent = `Computer: ${computerScore}`;
